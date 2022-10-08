@@ -146,37 +146,6 @@ add_site_dir() {
 #	sed -i 's/gzip on;/gzip on;\n\n\tgzip_vary on;\n\tgzip_min_length #10240;\n\tgzip_proxied expired no-cache no-store private auth;\n\tgzip_types #text\/plain text\/css text\/xml text\/javascript application\/x-javascript #application\/xml;\n\tgzip_disable "MSIE [1-6]\.";\n/' /etc/nginx/nginx.conf
 #}
 
-#### notes remove: apt-get install apache2-utils for pass hashign
-#### htpasswd -bnBC 10 "" passpasspasspass | tr -d ':\n'
-
-### UPDATE users SET password='$2y$10$7E7id0pGy3pv1INTnN6emer70B.kOcPMTLB0fEpMHTUqnNwBSoWiK' WHERE email='ghost@example.com';
-
-## ? allow running script with args?
-
-# Pass parameters if set
-pass_params() {
-        while getopts ":e:d:u:p:n:" flag; do
-                case ${flag} in
-                 e  ) email=${OPTARG}
-                    echo "email=$email" >> deploy.config
-                    ;;
-		 d  ) dbname=${OPTARG}
-		    echo "dbname=$dbname" >> deploy.config
-		    ;;
-		 u  ) dbuser=${OPTARG}
-		    echo "dbuser=$dbuser" >> deploy.config
-		    ;;
-		 p  ) dbpass=${OPTARG}
-		    echo "dbpass=$dbpass" >> deploy.config
-		    ;;
-		 n  ) nonint=${OPTARG}
-		    ;;
-                esac
-        done
-
-}
-
-
 
 # Add normal system user, add to sudoers, temporarily allow sudo without password
 # Another one on the growing list of 'not good ideas'...
