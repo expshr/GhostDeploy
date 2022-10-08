@@ -11,6 +11,7 @@ This script is designed to take a new Ubuntu installation and do the following:
 - Configure and enable UFW, leaving only ports 22, 443 and 80 open.
 - Copy SSH keys from root user to the newly created Ghost user
 - Disable root login via SSH
+- save the created install log and config files as timestamped files in the GhostDeploy directory.
 
 The script should be run as root, and it will reboot the server a couple of times. After the first reboot, it will continue where it left off. It will broadcast progress to your SSH shell, but you can also `cat / tail-f deploy.log` to see progress.
 
