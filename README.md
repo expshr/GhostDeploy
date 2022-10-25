@@ -3,6 +3,8 @@ Deploy a production-ready Ghost installation on Ubuntu
 
 First version added. If you try it and it doesn't work, please create an issue.
 
+**NOTE: This is meant to patch, reboot and resume running. Latest Ubuntu build seems to break this. Once it reboots first time, check the deploy log and if it appears to have hung, start the script again (it will resume where it left off).**
+
 This script is designed to take a new Ubuntu installation and do the following:
 - Update (full dist-upgrade)
 - Install latest Nginx, MySQL
