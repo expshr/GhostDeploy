@@ -12,7 +12,7 @@ step_log=$run_dir/deploy.log
 
 
 
-while getopts ":e:d:u:p:n:" flag; do
+while getopts ":e:d:u:p:n:s" flag; do
                 case ${flag} in
                  e  ) email=${OPTARG}
                     echo "email=$email" >> deploy.config
@@ -28,6 +28,8 @@ while getopts ":e:d:u:p:n:" flag; do
 		    ;;
 		 n  ) nonint=${OPTARG}
 		    ;;
+      		 s  ) staging=true
+                    ;;
                 esac
         done
 
@@ -250,16 +252,28 @@ config_mysql() {
 	mysql -u root -e "FLUSH PRIVILEGES;"
 }
 
-# Install Node - Ghost currently requires, among others, version 16
+# Install NodeJS - see https://ghost.org/docs/faq/node-versions/ for supported & recommended versions.
 install_node() {
-	curl -sL https://deb.nodesource.com/setup_16.x | bash
+	apt-get update
+	apt-get install -y ca-certificates curl gnupg
+	mkdir -p /etc/apt/keyrings
+	curl -fsSL https://deb.nodesource.com/gpgkey/nodesource-repo.gpg.key | gpg --dearmor -o /etc/apt/keyrings/nodesource.gpg
+
+ 	NODE_MAJOR=18
+	echo "deb [signed-by=/etc/apt/keyrings/nodesource.gpg] https://deb.nodesource.com/node_$NODE_MAJOR.x nodistro main" | tee /etc/apt/sources.list.d/nodesource.list
+
+ 	apt-get update
 	apt-get install nodejs -y
-	npm install ghost-cli@latest -g
 }
 
 # Install Ghost
 ghost_install() {
-	su $username -c "ghost install --dir "/var/www/$domain" --sslemail $email --url $domain --dbhost localhost --dbuser $dbuser --dbpass $dbpass --dbname $dbname --auto --start --enable --no-prompt"
+	if $staging; then
+ 		stage_command="--sslstaging"
+   	else
+    		stage_command=""
+        fi
+ 	su $username -c "ghost install --dir "/var/www/$domain" --sslemail $email $stage_command --url $domain --dbhost localhost --dbuser $dbuser --dbpass $dbpass --dbname $dbname --auto --start --enable --no-prompt"
 }
 
 # Disable root login via SSH
