@@ -264,6 +264,9 @@ install_node() {
 
  	apt-get update
 	apt-get install nodejs -y
+
+	# Install Ghost CLI
+ 	npm install ghost-cli@latest -g
 }
 
 # Install Ghost
